@@ -12,10 +12,11 @@ public class Node : MonoBehaviour, IComparable<Node> {
     {
         if (outro == null) return -1;
         //Comparando custoF
-        if (this.custoF <= outro.custoF)
+        if (this.custoF < outro.custoF)
             return -1;
-        else
+        else if (this.custoF > outro.custoF)
             return 1;
+        else return 0;
     }
 
     public override bool Equals(object obj)

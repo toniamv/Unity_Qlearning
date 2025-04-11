@@ -11,7 +11,8 @@ public class Resolvedor : MonoBehaviour {
     public GerenciadorGrade gerenciador;
     public Color corAndado;
     public float velocidade = 2f;
-
+    
+    public Animator animator;
     private Coroutine moverPorCaminhoCoroutine;
 
 
@@ -21,7 +22,8 @@ public class Resolvedor : MonoBehaviour {
 
         List<Node> caminho = AEstrela(gerenciador.posicaoInicio, gerenciador.posicaoDestino);
         
-
+        animator = GetComponent<Animator>(); //Configura a animação
+        animator.SetBool("Andando", false);
         moverPorCaminhoCoroutine = StartCoroutine(MoverPorCaminhoCoroutine(caminho));
     }
 
@@ -142,31 +144,46 @@ public class Resolvedor : MonoBehaviour {
         transform.position = (Vector3)gerenciador.posicaoInicio + gerenciador.transform.position;
     }
 
-    private IEnumerator MoverPorCaminhoCoroutine(List<Node> caminho) {
-        if(moverPorCaminhoCoroutine != null) yield break; // Quebrando pois o jogador ja esta andando
+ private IEnumerator MoverPorCaminhoCoroutine(List<Node> caminho) {
 
-        if (caminho == null || caminho.Count == 0) { // Quebrando pois o caminho nao existe, ou eh impossivel
-            Debug.LogWarning("Caminho Impossivel");
-            yield break;
-        } 
+    if(moverPorCaminhoCoroutine != null) yield break;
 
-        for (int i = 0; i < caminho.Count; i++) {
-            Node nodoAtual = caminho[i];
-
-            ColorirTile(corAndado, nodoAtual.gameObject);
-
-            if (i < caminho.Count - 1) {
-                Node proximoNodo = caminho[i + 1];
-                Vector2 posicaoAtual = nodoAtual.transform.position; // Pegando a posicao relativa ao mundo
-                Vector2 posicaoDestino = proximoNodo.transform.position; // Pegando a posicao relativa ao mundo
-
-                yield return StartCoroutine(MoverParaPosicaoCoroutine(posicaoAtual, posicaoDestino));
-            }
-        }
-        moverPorCaminhoCoroutine = null;
+    if (caminho == null || caminho.Count == 0) {
+        Debug.LogWarning("Caminho Impossivel");
+        animator.SetBool("Andando", false);
+        yield break;
     }
 
+    animator.SetBool("Andando", true); //ativa animação aqui
+
+    for (int i = 0; i < caminho.Count; i++) {
+        Node nodoAtual = caminho[i];
+        ColorirTile(corAndado, nodoAtual.gameObject);
+
+        if (i < caminho.Count - 1) {
+            Node proximoNodo = caminho[i + 1];
+            Vector2 posicaoAtual = nodoAtual.transform.position;
+            Vector2 posicaoDestino = proximoNodo.transform.position;
+
+           //espelhando o sprite
+            if (posicaoDestino.x < posicaoAtual.x) {
+                //se for pra esquerda, espelha
+                transform.localScale = new Vector3(-Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+            } else if (posicaoDestino.x > posicaoAtual.x) {
+                //se for pra direita, deixa normal
+                transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+            }
+
+            yield return StartCoroutine(MoverParaPosicaoCoroutine(posicaoAtual, posicaoDestino));
+        }
+    }
+    animator.SetBool("Andando", false); //desativa quando o caminho termina
+    moverPorCaminhoCoroutine = null;
+}
+
+
     private IEnumerator MoverParaPosicaoCoroutine(Vector3 posicaoAtual, Vector3 posicaoDestino) {
+        
         float tempo = 0f;
         float distancia = Vector3.Distance(posicaoAtual, posicaoDestino);
 
