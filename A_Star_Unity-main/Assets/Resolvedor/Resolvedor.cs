@@ -114,22 +114,22 @@ public class Resolvedor : MonoBehaviour {
         int x = (int)node.posicao.x;
         int y = (int)node.posicao.y;
 
-        // Checa os vizinhos nas 4 direcoes
-        if (x > 0) vizinhos.Add(grade[x - 1, y]); // Esquerda
-        if (x < grade.GetLength(0) - 1) vizinhos.Add(grade[x + 1, y]); // Direita
-        if (y > 0) vizinhos.Add(grade[x, y - 1]); // Baixo
-        if (y < grade.GetLength(1) - 1) vizinhos.Add(grade[x, y + 1]); // Cima
-        
-        // // Checa os vizinhos nas 8 direcoes
+        // // Checa os vizinhos nas 4 direcoes
         // if (x > 0) vizinhos.Add(grade[x - 1, y]); // Esquerda
-        // if (x > 0 && y > 0) vizinhos.Add(grade[x - 1, y-1]); // Diagonal Inferior Esquerda
-        // if (x > 0 && y < grade.GetLength(1) - 1) vizinhos.Add(grade[x - 1, y + 1]); // Diagonal Superior Esquerda
-
         // if (x < grade.GetLength(0) - 1) vizinhos.Add(grade[x + 1, y]); // Direita
-        // if (x < grade.GetLength(0) - 1 && y > 0) vizinhos.Add(grade[x + 1, y - 1]); // Diagonal Inferior Direita
-        // if (x < grade.GetLength(0) - 1 && y < grade.GetLength(1) - 1) vizinhos.Add(grade[x + 1, y + 1]); // Diagonal Superior Esquerda
         // if (y > 0) vizinhos.Add(grade[x, y - 1]); // Baixo
         // if (y < grade.GetLength(1) - 1) vizinhos.Add(grade[x, y + 1]); // Cima
+        
+        // Checa os vizinhos nas 8 direcoes
+        if (x > 0) vizinhos.Add(grade[x - 1, y]); // Esquerda
+        if (x > 0 && y > 0) vizinhos.Add(grade[x - 1, y-1]); // Diagonal Inferior Esquerda
+        if (x > 0 && y < grade.GetLength(1) - 1) vizinhos.Add(grade[x - 1, y + 1]); // Diagonal Superior Esquerda
+
+        if (x < grade.GetLength(0) - 1) vizinhos.Add(grade[x + 1, y]); // Direita
+        if (x < grade.GetLength(0) - 1 && y > 0) vizinhos.Add(grade[x + 1, y - 1]); // Diagonal Inferior Direita
+        if (x < grade.GetLength(0) - 1 && y < grade.GetLength(1) - 1) vizinhos.Add(grade[x + 1, y + 1]); // Diagonal Superior Esquerda
+        if (y > 0) vizinhos.Add(grade[x, y - 1]); // Baixo
+        if (y < grade.GetLength(1) - 1) vizinhos.Add(grade[x, y + 1]); // Cima
 
         return vizinhos;
     }
